@@ -1,0 +1,32 @@
+kubectl create deployment proxy --image=nginx:latest --dry-run=client -o yaml > proxy_file.yaml
+kubectl create deployment redis --image=redis:alpine --namespace=database --dry-run=client -o yaml > redis.yaml
+kubectl create svc clusterip redis-svc --tcp 6379:6379 --namespace=database --dry-run=client -o yaml > redis-svc.yaml
+kubectl create deployment db --image=postgres:9.4 --namespace=database --dry-run=client -o yaml > postgres.yaml
+kubectl create svc clusterip db-svc --tcp 5432:5432 --namespace=database --dry-run=client -o yaml > db-svc.yaml
+kubectl create deployment worker --image=pandaacademy/worker:1.0 --dry-run=client -o yaml > worker.yaml
+
+kubectl get deployments.app
+--kubectl create -f proxy_file.yaml
+kubectl apply -f proxy_file.yaml
+kubectl apply -f redis-svc.yaml
+kubectl apply -f db.yaml
+kubectl apply -f db-svc.yaml
+kubectl apply -f worker.yaml
+kubectl get pod -A
+kubectl get pod -o yaml
+kubectl describe pod proxy-fd965bc49-dd5tr
+kubectl logs proxy-fd965bc49-dd5tr
+kubectl exec -it svc-test-6bffdc75b8-tbxlj -- bash
+kubectl api-resources
+kubectl get deployments.app proxy -o yaml > backup.yaml
+
+kubectl create deployment svc-test2 --image=nginx:alpine
+
+
+
+UI:
+lens
+k8s
+
+
+
