@@ -4,6 +4,11 @@ kubectl create svc clusterip redis-svc --tcp 6379:6379 --namespace=database --dr
 kubectl create deployment db --image=postgres:9.4 --namespace=database --dry-run=client -o yaml > postgres.yaml
 kubectl create svc clusterip db-svc --tcp 5432:5432 --namespace=database --dry-run=client -o yaml > db-svc.yaml
 kubectl create deployment worker --image=pandaacademy/worker:1.0 --dry-run=client -o yaml > worker.yaml
+kubectl create deployment vote --image=pandaacademy/vote:1.0 --namespace=vote --dry-run=client -o yaml > vote.yaml
+kubectl create svc nodeport vote-svc --tcp 5000:80 --node-port=31000 --namespace=vote --dry-run=client -o yaml > vote-svc.yaml
+kubectl create deployment result --image=pandaacademy/result:1.0 --namespace=result --dry-run=client -o yaml > result.yaml
+
+kubectl port-forward pod/result-685c648cdb-95cl8 --address 0.0.0.0 -n result 8080:80
 
 kubectl get deployments.app
 --kubectl create -f proxy_file.yaml
@@ -12,17 +17,20 @@ kubectl apply -f redis-svc.yaml
 kubectl apply -f db.yaml
 kubectl apply -f db-svc.yaml
 kubectl apply -f worker.yaml
+kubectl apply -f vote.yaml
+kubectl apply -f vote-svc.yaml
+kubectl apply -f result.yaml
 kubectl get pod -A
 kubectl get pod -o yaml
 kubectl describe pod proxy-fd965bc49-dd5tr
-kubectl logs proxy-fd965bc49-dd5tr
+kubectl logs result-685c648cdb-95cl8 -n result
 kubectl exec -it svc-test-6bffdc75b8-tbxlj -- bash
 kubectl api-resources
 kubectl get deployments.app proxy -o yaml > backup.yaml
 
 kubectl create deployment svc-test2 --image=nginx:alpine
 
-
+kubectl delete pod proxy
 
 UI:
 lens
